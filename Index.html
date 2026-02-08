@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Valentine 💖</title>
+
+<style>
+  /* MOBILE ONLY */
+  @media (min-width: 768px) {
+    body {
+      display: none;
+    }
+  }
+
+  body {
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
+    background: linear-gradient(135deg, #ffd1dc, #ffe6ef);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Poppins', system-ui, sans-serif;
+  }
+
+  .container {
+    text-align: center;
+    background: white;
+    padding: 35px 25px;
+    border-radius: 25px;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+    width: 85%;
+    max-width: 350px;
+    z-index: 2;
+  }
+
+  h1 {
+    color: #ff4f8b;
+    font-size: 1.6rem;
+    margin-bottom: 25px;
+  }
+
+  .buttons {
+    position: relative;
+    height: 70px;
+  }
+
+  button {
+    padding: 12px 26px;
+    border: none;
+    border-radius: 30px;
+    font-size: 1rem;
+    cursor: pointer;
+    position: absolute;
+  }
+
+  #yesBtn {
+    background: #ff4f8b;
+    color: white;
+    left: 50%;
+    transform: translateX(-120%);
+  }
+
+  #noBtn {
+    background: #ddd;
+    color: #333;
+    left: 50%;
+    transform: translateX(20%);
+  }
+
+  .result {
+    display: none;
+    margin-top: 25px;
+  }
+
+  .sticker {
+    font-size: 4rem;
+    animation: pop 0.6s ease;
+  }
+
+  @keyframes pop {
+    0% { transform: scale(0); }
+    80% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+  }
+
+  /* HEART RAIN */
+  .heart {
+    position: fixed;
+    top: -10px;
+    color: #ff4f8b;
+    font-size: 20px;
+    animation: fall linear forwards;
+    opacity: 0.8;
+    z-index: 1;
+  }
+
+  @keyframes fall {
+    to {
+      transform: translateY(110vh);
+      opacity: 0;
+    }
+  }
+</style>
+</head>
+
+<body>
+<div class="container">
+  <h1>Do you wanna be my Valentine? 💕</h1>
+
+  <div class="buttons">
+    <button id="yesBtn">Yes 💖</button>
+    <button id="noBtn">No 😅</button>
+  </div>
+
+  <div class="result" id="result">
+    <div class="sticker">🥰💘🎉</div>
+    <h2>I knew you'd say yes!</h2>
+  </div>
+</div>
+
+<script>
+  const noBtn = document.getElementById("noBtn");
+  const yesBtn = document.getElementById("yesBtn");
+  const result = document.getElementById("result");
+  const buttons = document.querySelector(".buttons");
+
+  /* AUDIO USING WEB AUDIO API */
+  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+  function playBruh() {
+    const osc = audioCtx.createOscillator();
+    osc.type = "sawtooth";
+    osc.frequency.setValueAtTime(180, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(70, audioCtx.currentTime + 0.4);
+    osc.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.4);
+  }
+
+  function playYesSound() {
+    const osc = audioCtx.createOscillator();
+    osc.type = "triangle";
+    osc.frequency.setValueAtTime(523, audioCtx.currentTime);
+    osc.frequency.setValueAtTime(659, audioCtx.currentTime + 0.15);
+    osc.frequency.setValueAtTime(784, audioCtx.currentTime + 0.3);
+    osc.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.5);
+  }
+
+  noBtn.addEventListener("click", () => {
+    playBruh();
+    const x = Math.random() * 260 - 130;
+    const y = Math.random() * 160 - 80;
+    noBtn.style.transform = `translate(${x}px, ${y}px)`;
+  });
+
+  yesBtn.addEventListener("click", () => {
+    playYesSound();
+    buttons.style.display = "none";
+    result.style.display = "block";
+    startHeartRain();
+  });
+
+  function startHeartRain() {
+    setInterval(() => {
+      const heart = document.createElement("div");
+      heart.className = "heart";
+      heart.innerText = "💖";
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.fontSize = Math.random() * 20 + 15 + "px";
+      heart.style.animationDuration = Math.random() * 3 + 3 + "s";
+      document.body.appendChild(heart);
+
+      setTimeout(() => heart.remove(), 6000);
+    }, 250);
+  }
+</script>
+</body>
+</html>
